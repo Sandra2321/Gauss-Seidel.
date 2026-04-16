@@ -174,7 +174,20 @@ const nEl=document.getElementById("n"),tolEl=document.getElementById("tol"),
 maxIterEl=document.getElementById("maxIter"),
 entradas=document.getElementById("entradas"),
 salida=document.getElementById("salida");
+function esDiagonalDominante(A) {
+    const n = A.length;
 
+    for (let i = 0; i < n; i++) {
+        let suma = 0;
+        for (let j = 0; j < n; j++) {
+            if (i !== j) suma += Math.abs(A[i][j]);
+        }
+        if (Math.abs(A[i][i]) <= suma) {
+            return false;
+        }
+    }
+    return true;
+}
 function crearEntradas(){
  const n=+nEl.value;
  let html=`<div class="table-container"><table><tr><th></th>`;
@@ -193,6 +206,17 @@ function resolver(){
  const dec=+document.getElementById("decimales").value;
  const f=v=>Number(v).toFixed(dec);
  const n=+nEl.value;
+    if (!esDiagonalDominante(A)) {
+    salida.innerHTML = `
+    <div class="section" style="border-left:5px solid #ff4d4d;">
+        <h2>Advertencia</h2>
+        <p>
+            La matriz <b>NO es diagonalmente dominante</b>.
+            El método puede no converger.
+        </p>
+    </div>`;
+    return;
+}
  let A=[],b=[],x=[];
  for(let i=0;i<n;i++){
   A[i]=[];
