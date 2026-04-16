@@ -201,7 +201,8 @@ function crearEntradas(){
  }
  entradas.innerHTML=html+`</table></div>`;
 }
-function reordenarParaDominancia(A, b, x) {
+
+    function reordenarParaDominancia(A, b, x) {
     const n = A.length;
     let usado = Array(n).fill(false);
 
@@ -209,19 +210,43 @@ function reordenarParaDominancia(A, b, x) {
 
     for (let i = 0; i < n; i++) {
         let mejorFila = -1;
-        let mejorValor = -1;
+        let encontrado = false;
 
         for (let j = 0; j < n; j++) {
             if (usado[j]) continue;
 
-            let valor = Math.abs(A[j][i]); // candidato para diagonal
-            if (valor > mejorValor) {
-                mejorValor = valor;
+            let diag = Math.abs(A[j][i]);
+            let suma = 0;
+
+            for (let k = 0; k < n; k++) {
+                if (k !== i) suma += Math.abs(A[j][k]);
+            }
+
+            if (diag > suma) {
                 mejorFila = j;
+                encontrado = true;
+                break;
             }
         }
 
-        if (mejorFila === -1) return null; // no se puede reordenar
+        if (!encontrado) {
+            // fallback: toma la mejor disponible
+            let mejor = -1;
+            let idx = -1;
+
+            for (let j = 0; j < n; j++) {
+                if (usado[j]) continue;
+
+                let val = Math.abs(A[j][i]);
+                if (val > mejor) {
+                    mejor = val;
+                    idx = j;
+                }
+            }
+
+            if (idx === -1) return null;
+            mejorFila = idx;
+        }
 
         usado[mejorFila] = true;
 
