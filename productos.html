@@ -176,7 +176,8 @@ const maxIterEl = document.getElementById("maxIter");
 const entradas = document.getElementById("entradas");
 const salida = document.getElementById("salida");
 
-/* ===================== VALIDACIÓN ===================== */
+/* ================= VALIDACIÓN ================= */
+
 function esDiagonalDominante(A) {
     const n = A.length;
 
@@ -190,12 +191,15 @@ function esDiagonalDominante(A) {
     return true;
 }
 
-/* ===================== PERMUTACIONES ===================== */
+/* ================= PERMUTACIONES ================= */
+
 function permutaciones(arr) {
     if (arr.length <= 1) return [arr];
     let res = [];
+
     for (let i = 0; i < arr.length; i++) {
         let resto = arr.slice(0, i).concat(arr.slice(i + 1));
+
         for (let p of permutaciones(resto)) {
             res.push([arr[i], ...p]);
         }
@@ -203,7 +207,8 @@ function permutaciones(arr) {
     return res;
 }
 
-/* ===================== REORDENAR CORRECTO ===================== */
+/* ================= REORDENAR ================= */
+
 function reordenar(A, b, x) {
     const idx = [...Array(A.length).keys()];
     const perms = permutaciones(idx);
@@ -224,7 +229,8 @@ function reordenar(A, b, x) {
     return { A, b, x, dominante: false };
 }
 
-/* ===================== CREAR MATRIZ ===================== */
+/* ================= CREAR MATRIZ ================= */
+
 function crearEntradas() {
     const n = +nEl.value;
     let html = `<div class="table-container"><table><tr><th></th>`;
@@ -246,7 +252,8 @@ function crearEntradas() {
     entradas.innerHTML = html + `</table></div>`;
 }
 
-/* ===================== RESOLVER ===================== */
+/* ================= RESOLVER ================= */
+
 function resolver() {
     const dec = +document.getElementById("decimales").value;
     const f = v => Number(v).toFixed(dec);
@@ -263,7 +270,7 @@ function resolver() {
         x[i] = +document.getElementById(`x_${i}`).value;
     }
 
-    /* ===================== REORDENAR ===================== */
+    /* REORDENAMIENTO */
     let info = reordenar(A, b, x);
     A = info.A; b = info.b; x = info.x;
 
@@ -273,14 +280,12 @@ function resolver() {
         advertencia = `
         <div class="section" style="border-left:5px solid orange;">
             <h2>Advertencia</h2>
-            <p>
-                No es estrictamente diagonal dominante.<br>
-                Puede converger, pero no está garantizado.
-            </p>
+            <p>No es diagonal dominante. Puede converger o divergir.</p>
         </div>`;
     }
 
-    /* ===================== GAUSS-SEIDEL ===================== */
+    /* ================= GAUSS-SEIDEL ================= */
+
     let xnew = [...x];
     let iter = 0;
     let error = Infinity;
@@ -326,10 +331,60 @@ function resolver() {
     salida.innerHTML = html;
 
     animarConvergencia(xHist);
+
+    /* ================= RESULTADO FINAL ================= */
+
+    let xFinal = xnew;
+    let residuo = [];
+
+    for (let i = 0; i < n; i++) {
+        let suma = 0;
+        for (let j = 0; j < n; j++) {
+            suma += A[i][j] * xFinal[j];
+        }
+        residuo[i] = Math.abs(suma - b[i]);
+    }
+
+    let comprobacion = `
+    <div class="section">
+        <h2>Resultado final</h2>
+
+        <p><b>Solución:</b></p>
+        <ul>`;
+
+    for (let i = 0; i < n; i++) {
+        comprobacion += `<li>x${i + 1} = ${xFinal[i].toFixed(6)}</li>`;
+    }
+
+    comprobacion += `
+        </ul>
+
+        <p><b>Error final:</b> ${error.toExponential(6)}</p>
+
+        <h3>Comprobación (Ax ≈ b)</h3>
+        <table>
+            <tr><th>Ecuación</th><th>Residuo</th></tr>`;
+
+    for (let i = 0; i < n; i++) {
+        comprobacion += `
+        <tr>
+            <td>E${i + 1}</td>
+            <td>${residuo[i].toExponential(6)}</td>
+        </tr>`;
+    }
+
+    comprobacion += `</table></div>`;
+
+    setTimeout(() => {
+        salida.innerHTML += comprobacion;
+    }, xHist.length * 300 + 500);
 }
 
-/* ===================== GRÁFICA ===================== */
+/* ================= GRÁFICA CORREGIDA ================= */
+
 function animarConvergencia(xHist) {
+    if (!xHist || xHist.length === 0) return;
+
     const n = xHist[0].length;
 
     let data = [];
@@ -343,41 +398,33 @@ function animarConvergencia(xHist) {
     }
 
     Plotly.newPlot("grafica", data, {
-        title: "Convergencia del método Gauss-Seidel",
-
-        xaxis: {
-            title: "Iteraciones"
-        },
-
-        yaxis: {
-            title: "Valor de las variables"
-        },
-
+        title: "Convergencia Gauss-Seidel",
+        xaxis: { title: "Iteraciones" },
+        yaxis: { title: "Valores" },
         paper_bgcolor: "#122c4a",
         plot_bgcolor: "#122c4a",
         font: { color: "#eaeaea" },
-
         margin: { t: 50 }
     });
 
     let k = 0;
+
     const timer = setInterval(() => {
         if (k >= xHist.length) return clearInterval(timer);
 
-        Plotly.extendTraces(
-            "grafica",
-            {
-                x: Array(n).fill([k + 1]),
-                y: xHist[k].map(v => [v])
-            },
-            [...Array(n).keys()]
-        );
+        for (let j = 0; j < n; j++) {
+            Plotly.extendTraces("grafica", {
+                x: [[k + 1]],
+                y: [[xHist[k][j]]]
+            }, [j]);
+        }
 
         k++;
     }, 300);
 }
 
-/* ===================== INICIO ===================== */
+/* ================= INICIO ================= */
+
 window.onload = () => {
     nEl.value = 3;
     crearEntradas();
