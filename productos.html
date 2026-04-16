@@ -170,10 +170,14 @@
     </div>
 <!-- ================== SCRIPT ORIGINAL ================== -->
 <script>
-const nEl=document.getElementById("n"),tolEl=document.getElementById("tol"),
-maxIterEl=document.getElementById("maxIter"),
-entradas=document.getElementById("entradas"),
-salida=document.getElementById("salida");
+<script>
+const nEl = document.getElementById("n"),
+tolEl = document.getElementById("tol"),
+maxIterEl = document.getElementById("maxIter"),
+entradas = document.getElementById("entradas"),
+salida = document.getElementById("salida");
+
+/* ===================== VALIDACIÓN ===================== */
 function esDiagonalDominante(A) {
     const n = A.length;
 
@@ -182,38 +186,24 @@ function esDiagonalDominante(A) {
         for (let j = 0; j < n; j++) {
             if (i !== j) suma += Math.abs(A[i][j]);
         }
-        if (Math.abs(A[i][i]) <= suma) {
-            return false;
-        }
+        if (Math.abs(A[i][i]) <= suma) return false;
     }
     return true;
 }
-function crearEntradas(){
- const n=+nEl.value;
- let html=`<div class="table-container"><table><tr><th></th>`;
- for(let j=0;j<n;j++)html+=`<th>x${j+1}</th>`;
- html+=`<th>b</th><th>x₀</th></tr>`;
- for(let i=0;i<n;i++){
-  html+=`<tr><th>Ecuación ${i+1}</th>`;
-  for(let j=0;j<n;j++)html+=`<td><input type="number" step="any" id="A_${i}_${j}" value="0"></td>`;
-  html+=`<td><input type="number" id="b_${i}" value="0"></td>
-          <td><input type="number" id="x_${i}" value="0"></td></tr>`;
- }
- entradas.innerHTML=html+`</table></div>`;
-}
 
-    function reordenarParaDominancia(A, b, x) {
+/* ===================== REORDENAMIENTO MEJORADO ===================== */
+function reordenar(A, b, x) {
     const n = A.length;
-    let usado = Array(n).fill(false);
+    let usados = Array(n).fill(false);
 
     let A2 = [], b2 = [], x2 = [];
 
     for (let i = 0; i < n; i++) {
-        let mejorFila = -1;
-        let encontrado = false;
+        let mejor = -1;
+        let idx = -1;
 
         for (let j = 0; j < n; j++) {
-            if (usado[j]) continue;
+            if (usados[j]) continue;
 
             let diag = Math.abs(A[j][i]);
             let suma = 0;
@@ -222,125 +212,164 @@ function crearEntradas(){
                 if (k !== i) suma += Math.abs(A[j][k]);
             }
 
-            if (diag > suma) {
-                mejorFila = j;
-                encontrado = true;
-                break;
+            if (diag > suma && diag > mejor) {
+                mejor = diag;
+                idx = j;
             }
         }
 
-        if (!encontrado) {
-            // fallback: toma la mejor disponible
-            let mejor = -1;
-            let idx = -1;
-
+        // fallback si no hay dominante clara
+        if (idx === -1) {
+            let best = -1;
             for (let j = 0; j < n; j++) {
-                if (usado[j]) continue;
-
+                if (usados[j]) continue;
                 let val = Math.abs(A[j][i]);
-                if (val > mejor) {
-                    mejor = val;
+                if (val > best) {
+                    best = val;
                     idx = j;
                 }
             }
-
-            if (idx === -1) return null;
-            mejorFila = idx;
         }
 
-        usado[mejorFila] = true;
-
-        A2[i] = A[mejorFila];
-        b2[i] = b[mejorFila];
-        x2[i] = x[mejorFila];
+        usados[idx] = true;
+        A2[i] = A[idx];
+        b2[i] = b[idx];
+        x2[i] = x[idx];
     }
 
     return { A: A2, b: b2, x: x2 };
 }
-function resolver(){
- const dec=+document.getElementById("decimales").value;
- const f=v=>Number(v).toFixed(dec);
- const n=+nEl.value;
-let A=[],b=[],x=[];
-for(let i=0;i<n;i++){
-  A[i]=[];
-  for(let j=0;j<n;j++)A[i][j]=+document.getElementById(`A_${i}_${j}`).value;
-  b[i]=+document.getElementById(`b_${i}`).value;
-  x[i]=+document.getElementById(`x_${i}`).value;
+
+/* ===================== CREAR MATRIZ ===================== */
+function crearEntradas() {
+    const n = +nEl.value;
+    let html = `<div class="table-container"><table><tr><th></th>`;
+
+    for (let j = 0; j < n; j++) html += `<th>x${j + 1}</th>`;
+    html += `<th>b</th><th>x₀</th></tr>`;
+
+    for (let i = 0; i < n; i++) {
+        html += `<tr><th>Ecuación ${i + 1}</th>`;
+        for (let j = 0; j < n; j++) {
+            html += `<td><input type="number" id="A_${i}_${j}" value="0"></td>`;
+        }
+        html += `<td><input type="number" id="b_${i}" value="0"></td>
+                 <td><input type="number" id="x_${i}" value="0"></td></tr>`;
+    }
+
+    entradas.innerHTML = html + `</table></div>`;
 }
 
-/* 🔥 REORDENAMIENTO AUTOMÁTICO */
-let resultado = reordenarParaDominancia(A, b, x);
+/* ===================== RESOLVER ===================== */
+function resolver() {
+    const dec = +document.getElementById("decimales").value;
+    const f = v => Number(v).toFixed(dec);
+    const n = +nEl.value;
 
-if (!resultado) {
-    salida.innerHTML = `
-    <div class="section" style="border-left:5px solid orange;">
-        <h2>No se puede reordenar</h2>
-        <p>La matriz no permite formar una diagonal dominante con reordenamiento de filas.</p>
-    </div>`;
-    return;
+    let A = [], b = [], x = [];
+
+    for (let i = 0; i < n; i++) {
+        A[i] = [];
+        for (let j = 0; j < n; j++) {
+            A[i][j] = +document.getElementById(`A_${i}_${j}`).value;
+        }
+        b[i] = +document.getElementById(`b_${i}`).value;
+        x[i] = +document.getElementById(`x_${i}`).value;
+    }
+
+    /* ===================== REORDENAR ===================== */
+    let res = reordenar(A, b, x);
+    A = res.A;
+    b = res.b;
+    x = res.x;
+
+    /* ===================== VALIDACIÓN ===================== */
+    if (!esDiagonalDominante(A)) {
+        salida.innerHTML = `
+        <div class="section" style="border-left:5px solid orange;">
+            <h2>Advertencia</h2>
+            <p>
+                La matriz no es diagonalmente dominante incluso después del reordenamiento.
+                El método puede no converger.
+            </p>
+        </div>`;
+        return;
+    }
+
+    /* ===================== GAUSS-SEIDEL ===================== */
+    let xnew = [...x], iter = 0, error = Infinity, xHist = [];
+
+    let html = `<div class="section"><h2>Iteraciones</h2>
+    <div class="table-container"><table><tr><th>Iter</th>`;
+
+    for (let j = 0; j < n; j++) html += `<th>x${j + 1}</th>`;
+    html += `<th>Error</th></tr>`;
+
+    while (error > tolEl.value && iter < maxIterEl.value) {
+        iter++;
+        let emax = 0;
+
+        for (let i = 0; i < n; i++) {
+            let suma = b[i];
+
+            for (let j = 0; j < n; j++) {
+                if (i !== j) suma -= A[i][j] * xnew[j];
+            }
+
+            let nuevo = suma / A[i][i];
+            emax = Math.max(emax, Math.abs(nuevo - xnew[i]));
+            xnew[i] = nuevo;
+        }
+
+        error = emax;
+        xHist.push([...xnew]);
+
+        html += `<tr><td>${iter}</td>`;
+        xnew.forEach(v => html += `<td>${f(v)}</td>`);
+        html += `<td>${error.toExponential(3)}</td></tr>`;
+    }
+
+    html += `</table></div></div>
+    <div class="section"><h2>Convergencia</h2><div id="grafica"></div></div>`;
+
+    salida.innerHTML = html;
+    animarConvergencia(xHist);
 }
 
-A = resultado.A;
-b = resultado.b;
-x = resultado.x;
-/* 👇 AQUÍ PEGAS TU BLOQUE */
-if (!esDiagonalDominante(A)) {
-    salida.innerHTML = `
-    <div class="section" style="border-left:5px solid #ff4d4d;">
-        <h2>Advertencia</h2>
-        <p>
-            La matriz <b>NO es diagonalmente dominante</b>.
-            El método puede no converger.
-        </p>
-    </div>`;
-    return;
+/* ===================== GRÁFICA ===================== */
+function animarConvergencia(xHist) {
+    const n = xHist[0].length;
+    let data = [];
+
+    for (let j = 0; j < n; j++) {
+        data.push({ x: [], y: [], mode: 'lines+markers', name: `x${j + 1}` });
+    }
+
+    Plotly.newPlot("grafica", data, {
+        paper_bgcolor: "#122c4a",
+        plot_bgcolor: "#122c4a",
+        font: { color: "#eaeaea" },
+        margin: { t: 30 }
+    });
+
+    let k = 0;
+    const timer = setInterval(() => {
+        if (k >= xHist.length) return clearInterval(timer);
+
+        Plotly.extendTraces(
+            "grafica",
+            {
+                x: Array(n).fill([k + 1]),
+                y: xHist[k].map(v => [v])
+            },
+            [...Array(n).keys()]
+        );
+
+        k++;
+    }, 350);
 }
 
-let xnew=[...x],iter=0,error=Infinity,xHist=[];
- let html=`<div class="section"><h2>Iteraciones</h2><div class="table-container"><table><tr><th>Iter</th>`;
- for(let j=0;j<n;j++)html+=`<th>x${j+1}</th>`;
- html+=`<th>Error</th></tr>`;
- while(error>tolEl.value && iter<maxIterEl.value){
-  iter++;let emax=0;
-  for(let i=0;i<n;i++){
-   let suma=b[i];
-   for(let j=0;j<n;j++)if(i!==j)suma-=A[i][j]*xnew[j];
-   let nuevo=suma/A[i][i];
-   emax=Math.max(emax,Math.abs(nuevo-xnew[i]));
-   xnew[i]=nuevo;
-  }
-  error=emax;xHist.push([...xnew]);
-  html+=`<tr><td>${iter}</td>`;
-  xnew.forEach(v=>html+=`<td>${f(v)}</td>`);
-  html+=`<td>${error.toExponential(3)}</td></tr>`;
- }
- html+=`</table></div></div><div class="section"><h2>Convergencia</h2><div id="grafica"></div></div>`;
- salida.innerHTML=html;
- animarConvergencia(xHist);
-}
-
-function animarConvergencia(xHist){
- const n=xHist[0].length;
- let data=[];
- for(let j=0;j<n;j++)data.push({x:[],y:[],mode:'lines+markers',name:`x${j+1}`});
- Plotly.newPlot("grafica",data,{
-  paper_bgcolor:"#122c4a",
-  plot_bgcolor:"#122c4a",
-  font:{color:"#eaeaea"},
-  margin:{t:30}
- });
- let k=0;
- const timer=setInterval(()=>{
-  if(k>=xHist.length)return clearInterval(timer);
-  Plotly.extendTraces("grafica",
-   {x:Array(n).fill([k+1]),y:xHist[k].map(v=>[v])},
-   [...Array(n).keys()]);
-  k++;
- },350);
- 
-}
-// Generar matriz 2x2 automáticamente al cargar la página
+/* ===================== INICIO ===================== */
 window.onload = function () {
     nEl.value = 2;
     crearEntradas();
