@@ -37,7 +37,7 @@ html, body {
   
   .navbar-item {
     position: relative;
-    min-width: 180px;
+    min-width: 200px;
   }
   
   .navbar-item .nav-link {
