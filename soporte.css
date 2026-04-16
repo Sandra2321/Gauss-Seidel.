@@ -35,10 +35,14 @@ html, body {
     gap: 40px;
   }
   
-  .navbar-item {
-    position: relative;
-    min-width: 200px;
-  }
+.navbar-img {
+    width: 120px;
+    transition: transform 0.3s ease;
+}
+
+.navbar-img:hover {
+    transform: scale(1.2);
+}
   
   .navbar-item .nav-link {
     font-weight: 600;
