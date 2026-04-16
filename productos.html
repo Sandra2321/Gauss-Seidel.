@@ -201,7 +201,37 @@ function crearEntradas(){
  }
  entradas.innerHTML=html+`</table></div>`;
 }
+function reordenarParaDominancia(A, b, x) {
+    const n = A.length;
+    let usado = Array(n).fill(false);
 
+    let A2 = [], b2 = [], x2 = [];
+
+    for (let i = 0; i < n; i++) {
+        let mejorFila = -1;
+        let mejorValor = -1;
+
+        for (let j = 0; j < n; j++) {
+            if (usado[j]) continue;
+
+            let valor = Math.abs(A[j][i]); // candidato para diagonal
+            if (valor > mejorValor) {
+                mejorValor = valor;
+                mejorFila = j;
+            }
+        }
+
+        if (mejorFila === -1) return null; // no se puede reordenar
+
+        usado[mejorFila] = true;
+
+        A2[i] = A[mejorFila];
+        b2[i] = b[mejorFila];
+        x2[i] = x[mejorFila];
+    }
+
+    return { A: A2, b: b2, x: x2 };
+}
 function resolver(){
  const dec=+document.getElementById("decimales").value;
  const f=v=>Number(v).toFixed(dec);
@@ -214,6 +244,21 @@ for(let i=0;i<n;i++){
   x[i]=+document.getElementById(`x_${i}`).value;
 }
 
+/* 🔥 REORDENAMIENTO AUTOMÁTICO */
+let resultado = reordenarParaDominancia(A, b, x);
+
+if (!resultado) {
+    salida.innerHTML = `
+    <div class="section" style="border-left:5px solid orange;">
+        <h2>No se puede reordenar</h2>
+        <p>La matriz no permite formar una diagonal dominante con reordenamiento de filas.</p>
+    </div>`;
+    return;
+}
+
+A = resultado.A;
+b = resultado.b;
+x = resultado.x;
 /* 👇 AQUÍ PEGAS TU BLOQUE */
 if (!esDiagonalDominante(A)) {
     salida.innerHTML = `
