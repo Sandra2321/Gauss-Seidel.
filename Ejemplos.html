@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="imagenes/descarga-removebg-preview (1).png" type="image/x-icon">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="swiper-bundle.min.css">
+    <link rel="stylesheet" href="soporte.css">
+    <link rel="stylesheet" href="acces.css">
+    <link rel="stylesheet" href="telefono.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <title>Inicio</title>
+</head>
+
+<body>
+    <!--header-->
+    <header class="header" id="header">
+        <nav class="nav container">
+          <a href="index.html" class="navL">
+            <img src="imagenes/Gemini_Generated_Image_nfzgennfzgennfzg-removebg-preview.png" alt="favicon" class="navL-img">
+            Calculadora Gauss Seidel
+          </a>
+          <div class="navM" id="nav-menu">
+            <ul class="navList">
+              <li class="navItem">
+                <a href="index.html" class="navLink">Inicio</a>
+              </li>
+              <li class="navItem">
+                <a href="nosotros.html" class="navLink">Nosotros</a>
+              </li>
+              <li class="navItem">
+                <a href="productos.html" class="navLink">Calculadora</a>
+              </li>
+              <li class="navItem">
+                <a href="soporte.html" class="navLink">Soporte</a>
+              </li>
+            </ul>
+            <div class="navclose" id="nav-close">
+              <i class="bx bx-x"></i>
+            </div>
+          </div>
+          <div class="navToggle" id="nav-toggle">
+            <i class="bx bx-grid-alt"></i>
+          </div>
+        </nav>
+      </header>
+
+<main class="main container" role="main">
+  <section class="section">
+    <h1 class="sectiontitle" tabindex="0">📝 Memoria de Cálculo: Método de Gauss-Seidel</h1>
+    <p class="section-subtitle" tabindex="0">Resolución detallada y convergencia de errores</p>
+
+    <div class="accesibilidad-content">
+      <h2 tabindex="0">1. Definición del Sistema y Despejes</h2>
+      <p tabindex="0">Para el sistema de ecuaciones propuesto, realizamos los despejes de las variables de la diagonal principal:</p>
+      
+      <div style="background: rgba(0, 195, 255, 0.05); padding: 20px; border-radius: 10px; margin: 20px 0; border: 1px solid #00c3ff;">
+        $$x_1^{(k+1)} = \frac{9 + 2x_2^{(k)} + x_3^{(k)}}{10}$$
+        $$x_2^{(k+1)} = \frac{7 + 2x_1^{(k+1)} + x_3^{(k)}}{10}$$
+        $$x_3^{(k+1)} = \frac{6 + x_1^{(k+1)} + x_2^{(k+1)}}{5}$$
+      </div>
+
+      <h2 tabindex="0">2. Primera Iteración (k=1)</h2>
+      <p tabindex="0">Partiendo de valores iniciales x1=0, x2=0, x3=0:</p>
+
+      <div style="background: #1a1a1a; color: #ffffff; padding: 20px; border-radius: 10px; margin: 20px 0; border: 1px solid #333;">
+        <p style="color: #00c3ff; font-weight: bold; margin-bottom: 15px;">Cálculo de variables:</p>
+        $$x_1^{(1)} = \frac{9 + 2(0) + 0}{10} = 0.9000$$
+        $$x_2^{(1)} = \frac{7 + 2(0.9000) + 0}{10} = 0.8800$$
+        $$x_3^{(1)} = \frac{6 + 0.9000 + 0.8800}{5} = 1.5560$$
+      </div>
+
+      <div style="background: #252525; color: #ffffff; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 5px solid #00c3ff;">
+        <p style="color: #00c3ff; font-weight: bold; margin-bottom: 15px;">Cálculo de errores relativos porcentuales:</p>
+        $$|E_{a,1}| = \left| \frac{0.9000 - 0}{0.9000} \right| \times 100\% = 100\%$$
+        $$|E_{a,2}| = \left| \frac{0.8800 - 0}{0.8800} \right| \times 100\% = 100\%$$
+        $$|E_{a,3}| = \left| \frac{1.5560 - 0}{1.5560} \right| \times 100\% = 100\%$$
+      </div>
+
+      <h2 tabindex="0">3. Segunda Iteración (k=2)</h2>
+      <p tabindex="0">Sustituimos los valores obtenidos: x1=0.9, x2=0.88, x3=1.556:</p>
+
+      <div style="background: #1a1a1a; color: #ffffff; padding: 20px; border-radius: 10px; margin: 20px 0; border: 1px solid #333;">
+        <p style="color: #00c3ff; font-weight: bold; margin-bottom: 15px;">Cálculo de variables:</p>
+        $$x_1^{(2)} = \frac{9 + 2(0.8800) + 1.5560}{10} = 1.2316$$
+        $$x_2^{(2)} = \frac{7 + 2(1.2316) + 1.5560}{10} = 1.1019$$
+        $$x_3^{(2)} = \frac{6 + 1.2316 + 1.1019}{5} = 1.6667$$
+      </div>
+
+      <div style="background: #252525; color: #ffffff; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 5px solid #00c3ff;">
+        <p style="color: #00c3ff; font-weight: bold; margin-bottom: 15px;">Evolución del error (Convergencia):</p>
+        $$|E_{a,1}| = \left| \frac{1.2316 - 0.9000}{1.2316} \right| \times 100\% = 26.92\%$$
+        $$|E_{a,2}| = \left| \frac{1.1019 - 0.8800}{1.1019} \right| \times 100\% = 20.14\%$$
+        $$|E_{a,3}| = \left| \frac{1.6667 - 1.5560}{1.6667} \right| \times 100\% = 6.64\%$$
+      </div>
+
+      <h2 tabindex="0">4. Tabla Comparativa de Resultados</h2>
+      <div style="overflow-x: auto; margin: 20px 0;">
+        <table style="width:100%; border-collapse: collapse; background: #1a1a1a; color: white; border-radius: 10px; overflow: hidden; border: 1px solid #333;">
+          <thead>
+            <tr style="background-color: #00c3ff; color: #1a1a1a;">
+              <th style="padding: 15px; border: 1px solid #333;">Iteración (k)</th>
+              <th style="padding: 15px; border: 1px solid #333;">x1</th>
+              <th style="padding: 15px; border: 1px solid #333;">x2</th>
+              <th style="padding: 15px; border: 1px solid #333;">x3</th>
+              <th style="padding: 15px; border: 1px solid #333;">Error Máximo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding: 12px; border: 1px solid #333; text-align: center;">0</td>
+              <td style="padding: 12px; border: 1px solid #333; text-align: center;">0.0000</td>
+              <td style="padding: 12px; border: 1px solid #333; text-align: center;">0.0000</td>
+              <td style="padding: 12px; border: 1px solid #333; text-align: center;">0.0000</td>
+              <td style="padding: 12px; border: 1px solid #333; text-align: center;">---</td>
+            </tr>
+            <tr>
+              <td style="padding: 12px; border: 1px solid #333; text-align: center;">1</td>
+              <td style="padding: 12px; border: 1px solid #333; text-align: center;">0.9000</td>
+              <td style="padding: 12px; border: 1px solid #333; text-align: center;">0.8800</td>
+              <td style="padding: 12px; border: 1px solid #333; text-align: center;">1.5560</td>
+              <td style="padding: 12px; border: 1px solid #333; text-align: center; color: #ff4d4d;">100%</td>
+            </tr>
+            <tr>
+              <td style="padding: 12px; border: 1px solid #333; text-align: center;">2</td>
+              <td style="padding: 12px; border: 1px solid #333; text-align: center;">1.2316</td>
+              <td style="padding: 12px; border: 1px solid #333; text-align: center;">1.1019</td>
+              <td style="padding: 12px; border: 1px solid #333; text-align: center;">1.6667</td>
+              <td style="padding: 12px; border: 1px solid #333; text-align: center; color: #00c3ff;">26.92%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+<h2 tabindex="0">5. Gráfica de Convergencia Dinámica (Lineal)</h2>
+<div style="background: #1a1a1a; padding: 30px; border-radius: 12px; margin: 20px 0; border: 1px solid #333; font-family: 'Poppins', sans-serif; position: relative;">
+  <p style="color: #00c3ff; font-weight: bold; text-align: center; margin-bottom: 25px;">
+    Trayectoria de Error Relativo Porcentual
+  </p>
+
+  <style>
+    /* Estilo para la línea animada */
+    .draw-line {
+      stroke-dasharray: 500; /* Longitud total aproximada de la línea */
+      stroke-dashoffset: 500; /* Comienza oculta */
+      animation: drawCurve 2s ease-out forwards;
+      filter: drop-shadow(0 0 5px rgba(0, 195, 255, 0.7));
+    }
+
+    /* Animación que "dibuja" la línea al aparecer */
+    @keyframes drawCurve {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    /* Estilo para los puntos (aparecen después de la línea) */
+    .fade-dot {
+      opacity: 0;
+      animation: fadeInDot 0.5s ease-in forwards;
+    }
+
+    @keyframes fadeInDot {
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
+
+  <div style="position: relative; width: 100%; max-width: 500px; margin: 0 auto;">
+    <svg viewBox="0 0 400 200" style="width: 100%; height: auto; overflow: visible;">
+      <line x1="40" y1="180" x2="380" y2="180" style="stroke:#555; stroke-width:2" /> <line x1="40" y1="20" x2="40" y2="180" style="stroke:#555; stroke-width:2" />  <text x="5" y="25" fill="#888" font-size="10">100%</text>
+      <text x="15" y="100" fill="#888" font-size="10">50%</text>
+      <text x="20" y="180" fill="#888" font-size="10">0%</text>
+      <text x="-140" y="9" fill="#888" font-size="11" font-weight="bold" transform="rotate(-90)" style="font-family: sans-serif;">
+  Error Relativo (%)
+</text>
+
+      <path d="M 80 20 L 200 131.5 L 320 170" 
+            fill="none" 
+            stroke="#00c3ff" 
+            stroke-width="3" 
+            stroke-linecap="round" 
+            class="draw-line" />
+
+      <circle cx="80" cy="20" r="6" fill="#ff4d4d" class="fade-dot" style="animation-delay: 0.5s;" />
+      <text x="70" y="15" fill="#ff4d4d" font-size="12" font-weight="bold" class="fade-dot" style="animation-delay: 0.5s;">100%</text>
+
+      <circle cx="200" cy="131.5" r="6" fill="#00c3ff" class="fade-dot" style="animation-delay: 1.3s;" />
+      <text x="210" y="130" fill="#00c3ff" font-size="12" font-weight="bold" class="fade-dot" style="animation-delay: 1.3s;">26.92%</text>
+
+      <text x="70" y="195" fill="#888" font-size="10">Iter. 1</text>
+      <text x="190" y="195" fill="#888" font-size="10">Iter. 2</text>
+      <text x="310" y="195" fill="#888" font-size="10">Iter. 3</text>
+      <text x="370" y="195" fill="#888" font-size="11">Iteraciones</text>
+    </svg>
+  </div>
+
+  <div style="margin-top: 30px; border-top: 1px solid #333; padding-top: 15px;">
+    <p style="color: #aaa; font-size: 0.85em; line-height: 1.4; margin: 0;">
+      <strong style="color: #00c3ff;">Análisis Técnico Dinámico:</strong> La pendiente negativa pronunciada entre la Iteración 1 y 2 demuestra la alta eficiencia del algoritmo para este sistema. La animación de la línea azul ilustra la trayectoria de convergencia hacia la solución del sistema.
+    </p>
+  </div>
+</div>
+  </section>
+</main>
+
+    <!--FOOTER-->
+<footer class="footer section">
+    <div class="footercontainer container grid">
+        <div class="footercontent">
+            <a href="#" class="footerL">
+                <img src="imagenes/Gemini_Generated_Image_nfzgennfzgennfzg-removebg-preview.png" alt="TechGuard Logo" class="footer-img">
+                Gauss Seidel
+            </a>
+            <p class="footerdescription"><br>
+                Metodo iterativo para resolver sistemas de ecuaciones
+            </p>
+
+            <div class="footersocial">
+                
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=teachguard7@gmail.com&su=atencion al cliente&body=Escribe%20tus%20comentarios%20" target="_blank" class="footersocial-link" title="Síguenos en Google">
+                    <i class="bx bxl-google"></i>
+                </a>
+            </div>
+        </div>
+        <a href="#" class="scrollup" id="scroll-up">
+            <i class="bx bx-up-arrow-alt scrollupicon"></i>
+        </a>
+    </div>
+</footer>
+
+  <div class="navbar-custom">
+    <nav class="navbar-container">
+            
+</div>
+
+
+    <!--ENCABEZADO-->
+    <div class="encabezado">
+        <h6 id="footer-text">
+            Ⓒ 2026. Gauss-Seidel Reservados todos los derechos mx | prod | 5921c999edda20d9a7ca637474539d734862014e |
+            <br>Realizado por Castro Bracamontes Sandra Marisol
+            <span id="fecha-hora"></span>
+        </h6>
+    </div>
+
+  <script src="js/encabezado.js"></script>
+</body>
+</html>

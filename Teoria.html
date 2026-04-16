@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="imagenes/descarga-removebg-preview (1).png" type="image/x-icon">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="swiper-bundle.min.css">
+    <link rel="stylesheet" href="acces.css">
+    <link rel="stylesheet" href="telefono.css">
+    <link rel="stylesheet" href="soporte.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <title>Inicio</title>
+</head>
+
+<body>
+    <!--header-->
+    <header class="header" id="header">
+        <nav class="nav container">
+          <a href="index.html" class="navL">
+            <img src="imagenes/Gemini_Generated_Image_nfzgennfzgennfzg-removebg-preview.png" alt="favicon" class="navL-img">
+            Calculadora Gauss Seidel
+          </a>
+          <div class="navM" id="nav-menu">
+            <ul class="navList">
+              <li class="navItem">
+                <a href="index.html" class="navLink active-link">Inicio</a>
+              </li>
+              <li class="navItem">
+                <a href="nosotros.html" class="navLink">Nosotros</a>
+              </li>
+              <li class="navItem">
+                <a href="productos.html" class="navLink">Calculadora</a>
+              </li>
+              <li class="navItem">
+                <a href="soporte.html" class="navLink">Soporte</a>
+              </li>
+            </ul>
+            <div class="navclose" id="nav-close">
+              <i class="bx bx-x"></i>
+            </div>
+          </div>
+          <div class="navToggle" id="nav-toggle">
+            <i class="bx bx-grid-alt"></i>
+          </div>
+        </nav>
+      </header>
+
+<main class="main container" role="main">
+  <section class="section">
+    <h1 class="sectiontitle" tabindex="0">📑 Marco Teórico Extendido: Análisis Numérico</h1>
+    <p class="section-subtitle" tabindex="0">Investigación Académica sobre el Método de Gauss-Seidel</p>
+
+    <div class="accesibilidad-content">
+      
+      <h2 tabindex="0">1. Contexto Histórico y Evolución</h2>
+      <p tabindex="0">
+        El método de Gauss-Seidel representa una evolución fundamental en los métodos iterativos. Aunque lleva el nombre de los matemáticos alemanes <strong>Carl Friedrich Gauss</strong> (quien sentó las bases con sus métodos de eliminación) y <strong>Philipp Ludwig von Seidel</strong> (quien formalizó la técnica iterativa en 1874), su origen se remonta a la necesidad de resolver sistemas de ecuaciones lineales de gran magnitud que surgían en la geodesia y la astronomía del siglo XIX. 
+      </p>
+      <p tabindex="0">
+        Originalmente concebido para cálculos manuales, su importancia creció exponencialmente con la llegada de la computación moderna, convirtiéndose en un estándar para resolver problemas donde el almacenamiento de matrices densas resultaba computacionalmente costoso.
+      </p>
+
+      <h2 tabindex="0">2. Características Distintivas</h2>
+      <p tabindex="0">
+        El método se caracteriza por los siguientes pilares operativos que lo diferencian de otros algoritmos de aproximación:
+      </p>
+      <ul style="margin-bottom: 20px; line-height: 1.8;">
+        <li tabindex="0"><strong>Convergencia Acelerada:</strong> Al utilizar los valores actualizados de las variables tan pronto como están disponibles, el método suele converger en la mitad de iteraciones que el método de Jacobi.</li>
+        <li tabindex="0"><strong>Optimización de Memoria:</strong> No requiere un vector auxiliar para almacenar los resultados de la iteración anterior, lo que permite trabajar con sistemas de mayor escala bajo las mismas restricciones de hardware.</li>
+        <li tabindex="0"><strong>Sensibilidad al Orden:</strong> La velocidad de convergencia puede verse afectada por el orden en que se procesan las ecuaciones, una característica que se aprovecha en ingeniería para optimizar procesos.</li>
+      </ul>
+
+      <h2 tabindex="0">3. Desarrollo Algorítmico</h2>
+      <p tabindex="0">
+        Para un sistema de n ecuaciones, el algoritmo descompone la matriz de coeficientes en una matriz triangular inferior y una superior. La expresión matemática formal para la actualización de cada incógnita se define como:
+      </p>
+      
+      <div style="background: rgba(0, 195, 255, 0.05); padding: 20px; border-radius: 10px; margin: 20px 0; border: 1px solid #00c3ff; text-align: center;">
+        $$x_i^{(k+1)} = \frac{b_i - \sum_{j=1}^{i-1} a_{ij}x_j^{(k+1)} - \sum_{j=i+1}^{n} a_{ij}x_j^{(k)}}{a_{ii}}$$
+      </div>
+
+      <h2 tabindex="0">4. Requisitos de Estabilidad y Convergencia</h2>
+      <p tabindex="0">
+        En el ámbito de sistemas computacionales, la estabilidad del algoritmo es crítica. Se establece que el método es <strong>convergente</strong> si se cumplen los siguientes criterios técnicos:
+      </p>
+      <ol style="margin-left: 20px; margin-bottom: 20px;">
+        <li tabindex="0">La matriz de coeficientes debe ser <strong>diagonalmente dominante</strong> por filas.</li>
+        <li tabindex="0">La matriz debe ser simétrica y definida positiva en problemas de optimización.</li>
+      </ol>
+
+      <h2 tabindex="0">5. Aplicación en la Ingeniería de Software</h2>
+      <p tabindex="0">
+        En el desarrollo de aplicaciones modernas (como los módulos de simulación en C# implementados en este proyecto), Gauss-Seidel es preferido por su facilidad de implementación en arquitecturas de programación orientada a objetos. La capacidad de incluir bloques <code>try-catch</code> para gestionar divergencias y la facilidad para visualizar el error relativo porcentual en cada iteración lo convierten en una herramienta robusta para el control de calidad de datos.
+      </p>
+
+      <table style="width:100%; border-collapse: collapse; margin: 25px 0; background: white; color: #333; font-size: 0.95em;">
+        <thead>
+          <tr style="background-color: #00c3ff; color: white;">
+            <th style="padding: 15px; border: 1px solid #ddd;">Aspecto</th>
+            <th style="padding: 15px; border: 1px solid #ddd;">Especificación Técnica</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 12px; border: 1px solid #ddd;"><strong>Criterio de Parada</strong></td>
+            <td style="padding: 12px; border: 1px solid #ddd;">Error relativo porcentual < epsilon</td>
+          </tr>
+          <tr>
+  <td style="padding: 12px; border: 1px solid #ddd;"><strong>Complejidad</strong></td>
+  <td style="padding: 12px; border: 1px solid #ddd;">O(n^2) por cada ciclo iterativo</td>
+</tr>
+          <tr>
+            <td style="padding: 12px; border: 1px solid #ddd;"><strong>Flexibilidad</strong></td>
+            <td style="padding: 12px; border: 1px solid #ddd;">Alta adaptabilidad a matrices dispersas</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 tabindex="0">6. Conclusiones Metodológicas</h2>
+      <p tabindex="0">
+        A través del análisis realizado, se concluye que el método de Gauss-Seidel no solo es una técnica de cálculo, sino una solución algorítmica eficiente que minimiza el consumo de recursos de CPU y RAM en sistemas de información complejos, garantizando precisión en los resultados finales.
+      </p>
+    </div>
+  </section>
+</main>
+<footer class="footer section">
+    <div class="footercontainer container grid">
+        <div class="footercontent">
+            <a href="#" class="footerL">
+                <img src="imagenes/Gemini_Generated_Image_nfzgennfzgennfzg-removebg-preview.png" alt="TechGuard Logo" class="footer-img">
+                Gauss Seidel
+            </a>
+            <p class="footerdescription"><br>
+                Metodo iterativo para resolver sistemas de ecuaciones
+            </p>
+
+            <div class="footersocial">
+                
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=teachguard7@gmail.com&su=atencion al cliente&body=Escribe%20tus%20comentarios%20" target="_blank" class="footersocial-link" title="Síguenos en Google">
+                    <i class="bx bxl-google"></i>
+                </a>
+            </div>
+        </div>
+        <a href="#" class="scrollup" id="scroll-up">
+            <i class="bx bx-up-arrow-alt scrollupicon"></i>
+        </a>
+    </div>
+</footer>
+
+  <div class="navbar-custom">
+    <nav class="navbar-container">
+            
+</div>
+
+
+    <!--ENCABEZADO-->
+    <div class="encabezado">
+        <h6 id="footer-text">
+            Ⓒ 2026. Gauss-Seidel Reservados todos los derechos mx | prod | 5921c999edda20d9a7ca637474539d734862014e |
+            <br>Realizado por Castro Bracamontes Sandra Marisol
+            <span id="fecha-hora"></span>
+        </h6>
+    </div>
+
+    <script
+    type="text/javascript"
+    src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"
+  ></script>
+  <!-- 3) Tu lógica de newsletter -->
+  <script src="js/newsletter.js"></script>
+  <!-- 4) Otros scripts de tu web -->
+  <script src="js/encabezado.js"></script>
+  <script src="js/scrollreveal.min.js"></script>
+  <script src="js/swiper-bundle.min.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/descuento.js"></script>
+  <script src="js/horarios.js"></script>
+</body>
+</html>

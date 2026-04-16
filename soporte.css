@@ -35,10 +35,10 @@ html, body {
     gap: 40px;
   }
   
-.navbar-img {
-    width: 250px;   /* aumenta este valor */
-    height: auto;   /* mantiene proporción */
-}
+  .navbar-item {
+    position: relative;
+    min-width: 180px;
+  }
   
   .navbar-item .nav-link {
     font-weight: 600;
@@ -1450,3 +1450,4 @@ cursor: pointer;
 }
 
     
+
