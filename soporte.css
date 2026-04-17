@@ -12,7 +12,6 @@ html, body {
   scroll-behavior: smooth;
 }
 
-/* Navbar informativo del footer estilo TechGuard */
 .navbar-custom {
     background-color: #000000; /* fondo oscuro similar a header */
     padding: 40px 100px;
