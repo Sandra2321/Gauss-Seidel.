@@ -238,11 +238,11 @@ function crearEntradas() {
     for (let i = 0; i < n; i++) {
         html += `<tr><th>Ecuación ${i + 1}</th>`;
         for (let j = 0; j < n; j++) {
-            html += `<td><input type="number" id="A_${i}_${j}" value="0"></td>`;
+            html += `<td><input type="number" step="any" id="A_${i}_${j}" value="0"></td>`;
         }
         html += `
-            <td><input type="number" id="b_${i}" value="0"></td>
-            <td><input type="number" id="x_${i}" value="0"></td>
+            <td><input type="number" step="any" id="b_${i}" value="0"></td>
+            <td><input type="number" step="any" id="x_${i}" value="0"></td>
         </tr>`;
     }
 
@@ -371,7 +371,7 @@ function resolver() {
         xHist.push([...xnew]); // 🔥 AGREGADO HISTORIAL
 
         html += `<tr><td>${iter}</td>`;
-        xnew.forEach(v => html += `<td>${v.toFixed(6)}</td>`);
+        xnew.forEach(v => html += `<td>${v.toFixed(dec)}</td>`);
         html += `<td>${errorAbs.toExponential(3)}</td></tr>`;
 
         if (errorAbs < tol) break;
@@ -411,13 +411,13 @@ for (let i = 0; i < n; i++) {
 
         suma += coef * val;
 
-        izquierda += `${coef.toFixed(6)}(${val.toFixed(6)})`;
+        izquierda += `${coef.toFixed(dec)}(${val.toFixed(dec)})`;
         if (j < n - 1) izquierda += " + ";
     }
 
     ecuaciones += `Ecuación ${i + 1}:\n`;
-    ecuaciones += `${izquierda} = ${suma.toFixed(6)}  |  b = ${b[i].toFixed(6)}\n`;
-    ecuaciones += `Error = ${(Math.abs(suma - b[i])).toExponential(3)}\n\n`;
+    ecuaciones += `${izquierda} = ${suma.toFixed(dec)}  |  b = ${b[i].toFixed(dec)}\n`;
+    ecuaciones += `Error = ${(Math.abs(suma - b[i])).toExponential(dec)}\n\n`;
 }
     /* ================= COMPROBACIÓN DEL SISTEMA ================= */
 
@@ -437,7 +437,7 @@ let consola = `
 `;
 
     for (let i = 0; i < n; i++) {
-        consola += `x${i + 1} = ${xnew[i].toFixed(6)}\n`;
+        consola += `x${i + 1} = ${xnew[i].toFixed(dec)}\n`;
     }
 
    consola += `
