@@ -170,6 +170,98 @@
     </div>
 
 <script>
+    <script>
+
+/* ================= CSS INYECTADO ================= */
+const estilos = document.createElement("style");
+estilos.innerHTML = `
+.table-container {
+    overflow-x: auto;
+    margin-top: 15px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    background: #0f2238;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+th {
+    background: #1f4068;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+}
+
+td {
+    padding: 8px;
+    text-align: center;
+    color: #eaeaea;
+}
+
+tr:nth-child(even) {
+    background: #122c4a;
+}
+
+tr:hover {
+    background: #1a3a5f;
+}
+
+.error-ok {
+    color: #00ff9c;
+    font-weight: bold;
+}
+
+.error-warn {
+    color: #ffcc00;
+    font-weight: bold;
+}
+
+/* RESULTADO FINAL */
+.resultado-box {
+    margin-top: 20px;
+    background: #0f2238;
+    padding: 15px;
+    border-radius: 10px;
+    color: #eaeaea;
+}
+
+.resultado-box h3 {
+    margin-bottom: 10px;
+    color: #00d4ff;
+}
+
+.resultado-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+}
+
+.resultado-item {
+    background: #122c4a;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* SISTEMA */
+.sistema-box {
+    margin-top: 20px;
+    background: #0f2238;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.ecuacion {
+    margin-bottom: 10px;
+    padding: 10px;
+    background: #122c4a;
+    border-radius: 8px;
+}
+`;
+document.head.appendChild(estilos);
 const nEl = document.getElementById("n");
 const tolEl = document.getElementById("tol");
 const maxIterEl = document.getElementById("maxIter");
@@ -397,8 +489,30 @@ function resolver() {
     else if (res < tol * 100) calidad = "⚠ Aceptable";
     else calidad = "✖ No confiable";
 
-    /* ===== SISTEMA SUSTITUIDO ===== */
-    let ecuaciones = "\nSISTEMA (Ax = b)\n\n";
+    /* ===== RESULTADO BONITO ===== */
+    let consola = `<div class="resultado-box">
+    <h3>Resultado final</h3>
+
+    <div class="resultado-grid">`;
+
+    for (let i = 0; i < n; i++) {
+        consola += `<div class="resultado-item">
+            <b>x${i+1}</b><br>${xnew[i].toFixed(6)}
+        </div>`;
+    }
+
+    consola += `</div>
+
+    <br>
+    <b>Error absoluto:</b> ${errorAbs.toExponential(6)} <br>
+    <b>Residuo:</b> ${res.toExponential(6)} <br>
+    <b>Iteraciones:</b> ${iter} <br>
+    <b>Estado:</b> ${calidad}
+    </div>`;
+
+    /* ===== SISTEMA BONITO ===== */
+    let ecuacionesHTML = `<div class="sistema-box">
+    <h3>Comprobación del sistema (Ax = b)</h3>`;
 
     for (let i = 0; i < n; i++) {
         let linea = "";
@@ -410,29 +524,18 @@ function resolver() {
             if (j < n - 1) linea += " + ";
         }
 
-        ecuaciones += `Ecuación ${i + 1}:\n${linea} = ${suma.toFixed(6)}\n`;
-        ecuaciones += `b = ${b[i].toFixed(6)}\n`;
-        ecuaciones += `Error = ${(Math.abs(suma - b[i])).toExponential(3)}\n\n`;
+        ecuacionesHTML += `
+        <div class="ecuacion">
+            <b>Ecuación ${i + 1}</b><br>
+            ${linea} = <b>${suma.toFixed(6)}</b><br>
+            b = ${b[i].toFixed(6)}<br>
+            Error = ${(Math.abs(suma - b[i])).toExponential(3)}
+        </div>`;
     }
 
-    let consola = `<div class="consola">\nRESULTADO FINAL\n====================\n`;
+    ecuacionesHTML += `</div>`;
 
-    for (let i = 0; i < n; i++) {
-        consola += `x${i+1} = ${xnew[i].toFixed(6)}\n`;
-    }
-
-    consola += `
-------------------------
-Error absoluto = ${errorAbs.toExponential(6)}
-Residuo        = ${res.toExponential(6)}
-Iteraciones    = ${iter}
-Estado         = ${calidad}
-------------------------
-
-${ecuaciones}
-</div>`;
-
-    salida.innerHTML += consola;
+    salida.innerHTML += consola + ecuacionesHTML;
 }
 
 /* ================= INICIO ================= */
