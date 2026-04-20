@@ -427,6 +427,23 @@ function resolver() {
     Error = ${errorAbs}
     <br>Residuo = ${res}
     `;
+    salida.innerHTML += `<br><b>Iteraciones:</b><br><table border="1" style="margin:auto;">`;
+
+salida.innerHTML += `<tr><th>Iter</th>`;
+for (let j = 0; j < n; j++) {
+    salida.innerHTML += `<th>x${j + 1}</th>`;
+}
+salida.innerHTML += `</tr>`;
+
+xHist.forEach((valores, k) => {
+    salida.innerHTML += `<tr><td>${k + 1}</td>`;
+    valores.forEach(v => {
+        salida.innerHTML += `<td>${v.toFixed(dec)}</td>`;
+    });
+    salida.innerHTML += `</tr>`;
+});
+
+salida.innerHTML += `</table>`;
     animarConvergencia(xHist);
 }
 
