@@ -377,7 +377,11 @@ function resolver() {
             html += `<td style="text-align:right;">${v.toFixed(6)}</td>`;
         });
 
-        let colorError = errorAbs < tol ? "#00ff88" : "#ffcc00";
+        let claseError = errorAbs < tol ? "error-ok" : "error-warn";
+
+html += `<td class="${claseError}">
+            ${errorAbs.toExponential(3)}
+         </td>`;
 
         html += `<td style="text-align:right; color:${colorError};">
                     ${errorAbs.toExponential(3)}
