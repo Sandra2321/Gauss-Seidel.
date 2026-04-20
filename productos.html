@@ -204,7 +204,6 @@ function validarDatos(A, b, x) {
             if (!isFinite(A[i][j])) return false;
         }
     }
-
     return true;
 }
 
@@ -219,11 +218,11 @@ function hacerDiagonalDominante(A, b, x) {
         return Math.abs(A[j][j]) - Math.abs(A[i][i]);
     });
 
-    let A2 = filas.map(i => A[i]);
-    let b2 = filas.map(i => b[i]);
-    let x2 = filas.map(i => x[i]);
-
-    return { A: A2, b: b2, x: x2 };
+    return {
+        A: filas.map(i => A[i]),
+        b: filas.map(i => b[i]),
+        x: filas.map(i => x[i])
+    };
 }
 
 /* ================= CREAR MATRIZ ================= */
@@ -249,7 +248,7 @@ function crearEntradas() {
     entradas.innerHTML = html + `</table></div>`;
 }
 
-/* ================= GRÁFICA (AGREGADA DEL PRIMER CÓDIGO) ================= */
+/* ================= GRÁFICA ================= */
 
 function animarConvergencia(xHist) {
     if (!xHist || xHist.length === 0) return;
@@ -379,13 +378,10 @@ function resolver() {
 
         let claseError = errorAbs < tol ? "error-ok" : "error-warn";
 
-html += `<td class="${claseError}">
-            ${errorAbs.toExponential(3)}
-         </td>`;
-
-        html += `<td style="text-align:right; color:${colorError};">
+        html += `<td class="${claseError}">
                     ${errorAbs.toExponential(3)}
                  </td>`;
+
         html += `</tr>`;
 
         if (errorAbs < tol) break;
@@ -433,6 +429,7 @@ Iteraciones        = ${iter}
 
     salida.innerHTML += consola;
 }
+
 /* ================= INICIO ================= */
 
 window.onload = () => {
