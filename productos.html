@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nosotros - TechGuard</title>
+    <title>Calculadora - TechGuard</title>
     <link rel="shortcut icon" href="imagenes/Gemini_Generated_Image_nfzgennfzgennfzg-removebg-preview.png" type="image/x-icon">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
@@ -274,8 +274,7 @@ function animarConvergencia(xHist) {
             yaxis: { title: "Valores" },
             paper_bgcolor: "#122c4a",
             plot_bgcolor: "#122c4a",
-            font: { color: "#eaeaea" },
-            margin: { t: 50 }
+            font: { color: "#eaeaea" }
         });
 
         let k = 0;
@@ -369,41 +368,20 @@ function resolver() {
         errorAbs = emax;
         xHist.push([...xnew]);
 
-        html += `<tr>`;
-        html += `<td style="text-align:center;">${iter}</td>`;
-
-        xnew.forEach(v => {
-            html += `<td style="text-align:right;">${v.toFixed(6)}</td>`;
-        });
+        html += `<tr><td>${iter}</td>`;
+        xnew.forEach(v => html += `<td>${v.toFixed(6)}</td>`);
 
         let claseError = errorAbs < tol ? "error-ok" : "error-warn";
-
-        html += `<td class="${claseError}">
-                    ${errorAbs.toExponential(3)}
-                 </td>`;
-
-        html += `</tr>`;
+        html += `<td class="${claseError}">${errorAbs.toExponential(3)}</td></tr>`;
 
         if (errorAbs < tol) break;
-
-        if (errorAbs > errorAnterior) {
-            html += `<tr>
-                <td colspan="${n + 2}" style="color:red; text-align:center;">
-                Posible divergencia detectada
-                </td>
-            </tr>`;
-            break;
-        }
+        if (errorAbs > errorAnterior) break;
 
         errorAnterior = errorAbs;
     }
 
     html += `</table></div></div>`;
-
-    html += `<div class="section">
-                <h2>Convergencia</h2>
-                <div id="grafica"></div>
-             </div>`;
+    html += `<div class="section"><h2>Convergencia</h2><div id="grafica"></div></div>`;
 
     salida.innerHTML = html;
 
@@ -413,19 +391,46 @@ function resolver() {
 
     let res = residuo(A, xnew, b);
 
-    let consola = `<div class="consola" style="white-space: pre;">\n`;
+    /* ===== CALIDAD ===== */
+    let calidad;
+    if (res < tol) calidad = "✔ Muy cerca (solución confiable)";
+    else if (res < tol * 100) calidad = "⚠ Aceptable";
+    else calidad = "✖ No confiable";
+
+    /* ===== SISTEMA SUSTITUIDO ===== */
+    let ecuaciones = "\nSISTEMA (Ax = b)\n\n";
 
     for (let i = 0; i < n; i++) {
-        consola += `x${(i + 1).toString().padEnd(3)} = ${xnew[i].toFixed(6).padStart(12)}\n`;
+        let linea = "";
+        let suma = 0;
+
+        for (let j = 0; j < n; j++) {
+            suma += A[i][j] * xnew[j];
+            linea += `${A[i][j].toFixed(3)}(${xnew[j].toFixed(3)})`;
+            if (j < n - 1) linea += " + ";
+        }
+
+        ecuaciones += `Ecuación ${i + 1}:\n${linea} = ${suma.toFixed(6)}\n`;
+        ecuaciones += `b = ${b[i].toFixed(6)}\n`;
+        ecuaciones += `Error = ${(Math.abs(suma - b[i])).toExponential(3)}\n\n`;
+    }
+
+    let consola = `<div class="consola">\nRESULTADO FINAL\n====================\n`;
+
+    for (let i = 0; i < n; i++) {
+        consola += `x${i+1} = ${xnew[i].toFixed(6)}\n`;
     }
 
     consola += `
-Error absoluto     = ${errorAbs.toExponential(6)}
-Residuo ||Ax-b||   = ${res.toExponential(6)}
-Iteraciones        = ${iter}
-`;
+------------------------
+Error absoluto = ${errorAbs.toExponential(6)}
+Residuo        = ${res.toExponential(6)}
+Iteraciones    = ${iter}
+Estado         = ${calidad}
+------------------------
 
-    consola += `</div>`;
+${ecuaciones}
+</div>`;
 
     salida.innerHTML += consola;
 }
