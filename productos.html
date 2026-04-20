@@ -338,14 +338,15 @@ function resolver() {
     let errorAnterior = Infinity;
 
     let xnew = [...x];
-    let xHist = []; // 🔥 AGREGADO PARA LA GRÁFICA
+    let xHist = [];
 
     let html = `
     <div class="section">
     <h2>Iteraciones</h2>
     <div class="table-container">
     <table>
-    <tr><th>Iter</th>`;
+    <tr>
+        <th>Iter</th>`;
 
     for (let j = 0; j < n; j++) html += `<th>x${j + 1}</th>`;
     html += `<th>Error</th></tr>`;
@@ -367,17 +368,30 @@ function resolver() {
         }
 
         errorAbs = emax;
+        xHist.push([...xnew]);
 
-        xHist.push([...xnew]); // 🔥 AGREGADO HISTORIAL
+        html += `<tr>`;
+        html += `<td style="text-align:center;">${iter}</td>`;
 
-        html += `<tr><td>${iter}</td>`;
-        xnew.forEach(v => html += `<td>${v.toFixed(6)}</td>`);
-        html += `<td>${errorAbs.toExponential(3)}</td></tr>`;
+        xnew.forEach(v => {
+            html += `<td style="text-align:right;">${v.toFixed(6)}</td>`;
+        });
+
+        let colorError = errorAbs < tol ? "#00ff88" : "#ffcc00";
+
+        html += `<td style="text-align:right; color:${colorError};">
+                    ${errorAbs.toExponential(3)}
+                 </td>`;
+        html += `</tr>`;
 
         if (errorAbs < tol) break;
 
         if (errorAbs > errorAnterior) {
-            html += `<tr><td colspan="${n + 2}" style="color:red;">Posible divergencia detectada</td></tr>`;
+            html += `<tr>
+                <td colspan="${n + 2}" style="color:red; text-align:center;">
+                Posible divergencia detectada
+                </td>
+            </tr>`;
             break;
         }
 
@@ -386,71 +400,35 @@ function resolver() {
 
     html += `</table></div></div>`;
 
-    /* 🔥 AQUÍ SE AGREGA LA GRÁFICA */
-    html += `<div class="section"><h2>Convergencia</h2><div id="grafica"></div></div>`;
+    html += `<div class="section">
+                <h2>Convergencia</h2>
+                <div id="grafica"></div>
+             </div>`;
 
     salida.innerHTML = html;
 
-/* 🔥 SOLO UNA LLAMADA A LA GRÁFICA (IMPORTANTE) */
-setTimeout(() => {
-    animarConvergencia(xHist);
-}, 200);
+    setTimeout(() => {
+        animarConvergencia(xHist);
+    }, 200);
 
     let res = residuo(A, xnew, b);
-    /* ================= ECUACIONES COMPLETAS SUSTITUIDAS ================= */
 
-let ecuaciones = `\n\nSISTEMA SUSTITUIDO (Ax = b)\n\n`;
-
-for (let i = 0; i < n; i++) {
-    let izquierda = "";
-    let suma = 0;
-
-    for (let j = 0; j < n; j++) {
-        let coef = A[i][j];
-        let val = xnew[j];
-
-        suma += coef * val;
-
-        izquierda += `${coef.toFixed(6)}(${val.toFixed(6)})`;
-        if (j < n - 1) izquierda += " + ";
-    }
-
-    ecuaciones += `Ecuación ${i + 1}:\n`;
-    ecuaciones += `${izquierda} = ${suma.toFixed(6)}  |  b = ${b[i].toFixed(6)}\n`;
-    ecuaciones += `Error = ${(Math.abs(suma - b[i])).toExponential(3)}\n\n`;
-}
-    /* ================= COMPROBACIÓN DEL SISTEMA ================= */
-
-let calidad;
-
-if (res < tol) {
-    calidad = "✔ Muy cerca (solución confiable)";
-} else if (res < tol * 100) {
-    calidad = "⚠ Más o menos cerca (aceptable pero mejorable)";
-} else {
-    calidad = "✖ No cerca (posible divergencia o mala aproximación)";
-}
-
-let consola = `
-<div class="consola" style="white-space: pre-line;">
-
-`;
+    let consola = `<div class="consola" style="white-space: pre;">\n`;
 
     for (let i = 0; i < n; i++) {
-        consola += `x${i + 1} = ${xnew[i].toFixed(6)}\n`;
+        consola += `x${(i + 1).toString().padEnd(3)} = ${xnew[i].toFixed(6).padStart(12)}\n`;
     }
 
-   consola += `
-Error absoluto = ${errorAbs.toExponential(6)}
-Residuo ||Ax-b|| = ${res.toExponential(6)}
-Estado del sistema = ${calidad}
-Iteraciones = ${iter}
+    consola += `
+Error absoluto     = ${errorAbs.toExponential(6)}
+Residuo ||Ax-b||   = ${res.toExponential(6)}
+Iteraciones        = ${iter}
+`;
 
-${ecuaciones}
-</div>`;
+    consola += `</div>`;
+
     salida.innerHTML += consola;
 }
-
 /* ================= INICIO ================= */
 
 window.onload = () => {
