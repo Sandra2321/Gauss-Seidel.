@@ -157,55 +157,86 @@
     </div>
 
 <script>
+// ================== CONEXIÓN CON HTML ==================
+
+// Obtiene el tamaño del sistema (número de ecuaciones)
 const nEl = document.getElementById("n");
+
+// Obtiene la tolerancia (nivel de precisión)
 const tolEl = document.getElementById("tol");
+
+// Obtiene el número máximo de iteraciones
 const maxIterEl = document.getElementById("maxIter");
+
+// Contenedor donde se generará la tabla de entrada
 const entradas = document.getElementById("entradas");
+
+// Contenedor donde se mostrarán los resultados
 const salida = document.getElementById("salida");
 
-/* ================= UTILIDADES ================= */
 
+// ================== FUNCIONES UTILITARIAS ==================
+
+// Calcula la norma infinito de un vector
+// (es decir, el valor máximo absoluto)
 function normaInfinito(v) {
     return Math.max(...v.map(x => Math.abs(x)));
 }
 
+// Calcula el residuo del sistema ||Ax - b||
 function residuo(A, x, b) {
-    let r = [];
+    let r = []; // vector de errores
+
     for (let i = 0; i < A.length; i++) {
         let suma = 0;
+
+        // Multiplicación de la fila de A por el vector x
         for (let j = 0; j < A.length; j++) {
             suma += A[i][j] * x[j];
         }
+
+        // Diferencia con el valor real b
         r[i] = suma - b[i];
     }
+
+    // Regresa el mayor error
     return normaInfinito(r);
 }
 
+// Verifica que todos los datos sean números válidos
 function validarDatos(A, b, x) {
     const n = A.length;
 
     for (let i = 0; i < n; i++) {
+
+        // Verifica vector b y valores iniciales x
         if (!isFinite(b[i]) || !isFinite(x[i])) return false;
 
+        // Verifica cada valor de la matriz A
         for (let j = 0; j < n; j++) {
             if (!isFinite(A[i][j])) return false;
         }
     }
 
-    return true;
+    return true; // Todo correcto
 }
 
-/* ================= DIAGONAL DOMINANTE ================= */
 
+// ================== DIAGONAL DOMINANTE ==================
+
+// Reordena las filas para mejorar la convergencia
 function hacerDiagonalDominante(A, b, x) {
     const n = A.length;
 
+    // Crea arreglo de índices [0,1,2,...]
     let filas = [...Array(n).keys()];
 
+    // Ordena según el valor absoluto de la diagonal
     filas.sort((i, j) => {
         return Math.abs(A[j][j]) - Math.abs(A[i][i]);
     });
 
+    // Reorganiza matriz y vectores
     let A2 = filas.map(i => A[i]);
     let b2 = filas.map(i => b[i]);
     let x2 = filas.map(i => x[i]);
@@ -213,30 +244,41 @@ function hacerDiagonalDominante(A, b, x) {
     return { A: A2, b: b2, x: x2 };
 }
 
-/* ================= CREAR MATRIZ ================= */
+
+// ================== CREAR TABLA DINÁMICA ==================
 
 function crearEntradas() {
-    const n = +nEl.value;
+    const n = +nEl.value; // convierte a número
+
     let html = `<div class="table-container"><table><tr><th></th>`;
 
+    // Encabezados de variables
     for (let j = 0; j < n; j++) html += `<th>x${j + 1}</th>`;
+
     html += `<th>b</th><th>x₀</th></tr>`;
 
+    // Crear filas
     for (let i = 0; i < n; i++) {
         html += `<tr><th>Ecuación ${i + 1}</th>`;
+
+        // Inputs de la matriz A
         for (let j = 0; j < n; j++) {
             html += `<td><input type="number" step="any" id="A_${i}_${j}" value="0"></td>`;
         }
+
+        // Inputs de b y x inicial
         html += `
             <td><input type="number" step="any" id="b_${i}" value="0"></td>
             <td><input type="number" step="any" id="x_${i}" value="0"></td>
         </tr>`;
     }
 
+    // Inserta la tabla en pantalla
     entradas.innerHTML = html + `</table></div>`;
 }
 
-/* ================= GRÁFICA (AGREGADA DEL PRIMER CÓDIGO) ================= */
+
+// ================== GRÁFICA ==================
 
 function animarConvergencia(xHist) {
     if (!xHist || xHist.length === 0) return;
@@ -245,6 +287,7 @@ function animarConvergencia(xHist) {
 
     let data = [];
 
+    // Crea una línea por cada variable
     for (let j = 0; j < n; j++) {
         data.push({
             x: [],
@@ -256,24 +299,23 @@ function animarConvergencia(xHist) {
 
     setTimeout(() => {
 
+        // Inicializa gráfica
         Plotly.newPlot("grafica", data, {
             title: "Convergencia Gauss-Seidel",
             xaxis: { title: "Iteraciones" },
-            yaxis: { title: "Valores" },
-            paper_bgcolor: "#122c4a",
-            plot_bgcolor: "#122c4a",
-            font: { color: "#eaeaea" },
-            margin: { t: 50 }
+            yaxis: { title: "Valores" }
         });
 
         let k = 0;
 
+        // Animación paso a paso
         const timer = setInterval(() => {
             if (k >= xHist.length) {
                 clearInterval(timer);
                 return;
             }
 
+            // Agrega puntos a la gráfica
             for (let j = 0; j < n; j++) {
                 Plotly.extendTraces("grafica", {
                     x: [[k + 1]],
@@ -287,9 +329,12 @@ function animarConvergencia(xHist) {
     }, 150);
 }
 
-/* =================  ================= */
+
+// ================== FUNCIÓN PRINCIPAL ==================
 
 function resolver() {
+
+    // Obtiene parámetros
     const n = +nEl.value;
     const tol = parseFloat(tolEl.value);
     const maxIter = +maxIterEl.value;
@@ -297,6 +342,7 @@ function resolver() {
 
     let A = [], b = [], x = [];
 
+    // Lee datos del usuario
     for (let i = 0; i < n; i++) {
         A[i] = [];
         for (let j = 0; j < n; j++) {
@@ -306,14 +352,17 @@ function resolver() {
         x[i] = +document.getElementById(`x_${i}`).value;
     }
 
+    // Valida datos
     if (!validarDatos(A, b, x)) {
         alert("Datos inválidos");
         return;
     }
 
+    // Reordena matriz
     let orden = hacerDiagonalDominante(A, b, x);
     A = orden.A; b = orden.b; x = orden.x;
 
+    // Evita división entre cero
     for (let i = 0; i < n; i++) {
         if (A[i][i] === 0) {
             alert("Error: División por cero en fila " + (i + 1));
@@ -325,19 +374,10 @@ function resolver() {
     let errorAbs = Infinity;
     let errorAnterior = Infinity;
 
-    let xnew = [...x];
-    let xHist = []; // 🔥 AGREGADO PARA LA GRÁFICA
+    let xnew = [...x]; // copia de x
+    let xHist = []; // historial para gráfica
 
-    let html = `
-    <div class="section">
-    <h2>Iteraciones</h2>
-    <div class="table-container">
-    <table>
-    <tr><th>Iter</th>`;
-
-    for (let j = 0; j < n; j++) html += `<th>x${j + 1}</th>`;
-    html += `<th>Error</th></tr>`;
-
+    // Ciclo principal Gauss-Seidel
     while (iter < maxIter) {
         iter++;
         let emax = 0;
@@ -345,102 +385,53 @@ function resolver() {
         for (let i = 0; i < n; i++) {
             let suma = b[i];
 
+            // Aplica fórmula
             for (let j = 0; j < n; j++) {
                 if (i !== j) suma -= A[i][j] * xnew[j];
             }
 
             let nuevo = suma / A[i][i];
+
+            // Calcula error
             emax = Math.max(emax, Math.abs(nuevo - xnew[i]));
+
+            // Actualiza valor
             xnew[i] = nuevo;
         }
 
         errorAbs = emax;
 
-        xHist.push([...xnew]); // 🔥 AGREGADO HISTORIAL
+        // Guarda iteración
+        xHist.push([...xnew]);
 
-        html += `<tr><td>${iter}</td>`;
-        xnew.forEach(v => html += `<td>${v.toFixed(dec)}</td>`);
-        html += `<td>${errorAbs.toExponential(3)}</td></tr>`;
-
+        // Condición de parada
         if (errorAbs < tol) break;
 
-        if (errorAbs > errorAnterior) {
-            html += `<tr><td colspan="${n + 2}" style="color:red;">Posible divergencia detectada</td></tr>`;
-            break;
-        }
+        // Detecta divergencia
+        if (errorAbs > errorAnterior) break;
 
         errorAnterior = errorAbs;
     }
 
-    html += `</table></div></div>`;
-
-    /* 🔥 AQUÍ SE AGREGA LA GRÁFICA */
-    html += `<div class="section"><h2>Convergencia</h2><div id="grafica"></div></div>`;
-
-    salida.innerHTML = html;
-
-/* 🔥 SOLO UNA LLAMADA A LA GRÁFICA (IMPORTANTE) */
-setTimeout(() => {
-    animarConvergencia(xHist);
-}, 200);
-
+    // Calcula residuo final
     let res = residuo(A, xnew, b);
-    /* ================= ECUACIONES COMPLETAS SUSTITUIDAS ================= */
 
-let ecuaciones = `\n\nSISTEMA SUSTITUIDO (Ax = b)\n\n`;
-
-for (let i = 0; i < n; i++) {
-    let izquierda = "";
-    let suma = 0;
-
-    for (let j = 0; j < n; j++) {
-        let coef = A[i][j];
-        let val = xnew[j];
-
-        suma += coef * val;
-
-        izquierda += `${coef.toFixed(dec)}(${val.toFixed(dec)})`;
-        if (j < n - 1) izquierda += " + ";
-    }
-
-    ecuaciones += `Ecuación ${i + 1}:\n`;
-    ecuaciones += `${izquierda} = ${suma.toFixed(dec)}  |  b = ${b[i].toFixed(dec)}\n`;
-    ecuaciones += `Error = ${(Math.abs(suma - b[i])).toExponential(dec)}\n\n`;
-}
-    /* ================= COMPROBACIÓN DEL SISTEMA ================= */
-
-let calidad;
-
-if (res < tol) {
-    calidad = "✔ Muy cerca (solución confiable)";
-} else if (res < tol * 100) {
-    calidad = "⚠ Más o menos cerca (aceptable pero mejorable)";
-} else {
-    calidad = "✖ No cerca (posible divergencia o mala aproximación)";
-}
-
-let consola = `
-<div class="consola" style="white-space: pre-line;">
-
-`;
-
+    // Muestra resultados finales
+    salida.innerHTML = `Resultado final:<br>`;
     for (let i = 0; i < n; i++) {
-        consola += `x${i + 1} = ${xnew[i].toFixed(dec)}\n`;
+        salida.innerHTML += `x${i + 1} = ${xnew[i].toFixed(dec)}<br>`;
     }
 
-   consola += `
-Error absoluto = ${errorAbs.toExponential(6)}
-Residuo ||Ax-b|| = ${res.toExponential(6)}
-Estado del sistema = ${calidad}
-Iteraciones = ${iter}
-
-${ecuaciones}
-</div>`;
-    salida.innerHTML += consola;
+    salida.innerHTML += `
+    Error = ${errorAbs}
+    <br>Residuo = ${res}
+    `;
 }
 
-/* ================= INICIO ================= */
 
+// ================== INICIO ==================
+
+// Al cargar la página, genera la tabla automáticamente
 window.onload = () => {
     crearEntradas();
 };
