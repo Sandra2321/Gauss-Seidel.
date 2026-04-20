@@ -266,6 +266,7 @@ const tolEl = document.getElementById("tol");
 const maxIterEl = document.getElementById("maxIter");
 const entradas = document.getElementById("entradas");
 const salida = document.getElementById("salida");
+const decEl = document.getElementById("decimales");
 
 /* ================= UTILIDADES ================= */
 
@@ -392,6 +393,7 @@ function animarConvergencia(xHist) {
 /* ================= RESOLVER ================= */
 
 function resolver() {
+    const dec = parseInt(decEl.value);
     const n = +nEl.value;
     const tol = parseFloat(tolEl.value);
     const maxIter = +maxIterEl.value;
@@ -460,7 +462,7 @@ function resolver() {
         xHist.push([...xnew]);
 
         html += `<tr><td>${iter}</td>`;
-        xnew.forEach(v => html += `<td>${v.toFixed(6)}</td>`);
+        xnew.forEach(v => html += `<td>${v.toFixed(dec)}</td>`);
 
         let claseError = errorAbs < tol ? "error-ok" : "error-warn";
         html += `<td class="${claseError}">${errorAbs.toExponential(3)}</td></tr>`;
@@ -496,7 +498,7 @@ function resolver() {
 
     for (let i = 0; i < n; i++) {
         consola += `<div class="resultado-item">
-            <b>x${i+1}</b><br>${xnew[i].toFixed(6)}
+            <b>x${i+1}</b><br>${xnew[i].toFixed(dec)}
         </div>`;
     }
 
@@ -519,7 +521,7 @@ function resolver() {
 
         for (let j = 0; j < n; j++) {
             suma += A[i][j] * xnew[j];
-            linea += `${A[i][j].toFixed(3)}(${xnew[j].toFixed(3)})`;
+            linea += `${A[i][j].toFixed(dec)}(${xnew[j].toFixed(dec)})`;
             if (j < n - 1) linea += " + ";
         }
 
