@@ -312,7 +312,7 @@ function esDiagonalDominante(A) {
             if (i !== j) suma += Math.abs(A[i][j]);
         }
 
-        if (Math.abs(A[i][i]) < suma) return false;
+        if (Math.abs(A[i][i]) <= suma) return false;
     }
 
     return true;
