@@ -318,21 +318,52 @@ function esDiagonalDominante(A) {
     return true;
 }
 /* ================= DIAGONAL DOMINANTE ================= */
-
 function intentarReordenar(A, b, x) {
     const n = A.length;
 
+    function esDD(M) {
+        for (let i = 0; i < n; i++) {
+            let suma = 0;
+            for (let j = 0; j < n; j++) {
+                if (i !== j) suma += Math.abs(M[i][j]);
+            }
+            if (Math.abs(M[i][i]) < suma) return false;
+        }
+        return true;
+    }
+
+    function permutar(arr) {
+        if (arr.length === 1) return [arr];
+
+        let result = [];
+        for (let i = 0; i < arr.length; i++) {
+            let rest = [...arr.slice(0, i), ...arr.slice(i + 1)];
+            let perms = permutar(rest);
+            for (let p of perms) {
+                result.push([arr[i], ...p]);
+            }
+        }
+        return result;
+    }
+
     let indices = [...Array(n).keys()];
+    let perms = permutar(indices);
 
-    indices.sort((i, j) => Math.abs(A[j][j]) - Math.abs(A[i][i]));
+    for (let p of perms) {
+        let Atemp = p.map(i => A[i]);
 
-    return {
-        A: indices.map(i => A[i]),
-        b: indices.map(i => b[i]),
-        x: indices.map(i => x[i])
-    };
+        if (esDD(Atemp)) {
+            return {
+                A: Atemp,
+                b: p.map(i => b[i]),
+                x: p.map(i => x[i])
+            };
+        }
+    }
+
+    // si no se puede reordenar
+    return { A, b, x };
 }
-
 /* ================= CREAR MATRIZ ================= */
 
 function crearEntradas() {
