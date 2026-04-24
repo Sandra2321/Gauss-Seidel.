@@ -352,3 +352,98 @@
 #footer-text {
     text-align: center;
 }
+
+/* =========================
+   FORMULARIO RESPONSIVE
+   ========================= */
+
+.contact-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Inputs y textarea */
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+    transition: 0.3s;
+}
+
+/* Efecto focus */
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #6c63ff;
+    box-shadow: 0 0 5px rgba(108, 99, 255, 0.3);
+}
+
+/* Textarea más cómodo */
+.form-group textarea {
+    min-height: 120px;
+    resize: none;
+}
+
+/* Botón */
+.btn-submit {
+    background: #6c63ff;
+    color: #fff;
+    border: none;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-submit:hover {
+    background: #574fd6;
+}
+
+/* Mensaje de éxito */
+#respuesta {
+    margin-top: 10px;
+    font-size: 14px;
+    color: green;
+}
+
+/* =========================
+   RESPONSIVE PARA CELULAR
+   ========================= */
+@media screen and (max-width: 600px) {
+
+    .contact-card {
+        padding: 1.2rem;
+        border-radius: 15px;
+    }
+
+    .contact-card h3 {
+        font-size: 18px;
+        text-align: center;
+    }
+
+    .form-group label {
+        font-size: 13px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        font-size: 13px;
+        padding: 10px;
+    }
+
+    .btn-submit {
+        font-size: 14px;
+        padding: 12px;
+    }
+
+    /* Que no se vea apretado */
+    .grid {
+        grid-template-columns: 1fr !important;
+    }
+}
